@@ -141,7 +141,7 @@ class Oxa {
 			return $this->URLs[$hash]['short'];
 		}
 		// check database
-		elseif ($result = $this->getFromDBByLongUrl($longURL)) {
+		elseif ($result = $this->getByLongUrl($longURL)) {
 			return $result['id_c'];
 		}
 		
@@ -153,7 +153,7 @@ class Oxa {
 	 * @param string $id
 	 * @return mixed
 	 */
-	private function getFromDBById($id) {
+	public function getById($id) {
 		// sanitize
 		$id = $this->MySQLi->real_escape_string($id);
 
@@ -177,7 +177,7 @@ class Oxa {
 	 * @param string $longURL
 	 * @return mixed
 	 */
-	private function getFromDBByLongUrl($longURL) {
+	private function getByLongUrl($longURL) {
 		// sanitize
 		$longURL = $this->MySQLi->real_escape_string($longURL);
 
@@ -204,7 +204,7 @@ class Oxa {
 		for ($i = 0; $i < 10; $i++) {
 			$id = $this->getRandomString();
 			
-			if ($this->getFromDBById($id) === false) {
+			if ($this->getById($id) === false) {
 				return $id;
 			}
 		}
