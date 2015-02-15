@@ -87,10 +87,10 @@ class Oxa {
 					
 					if ($id) {
 						// save in DB
-						$longURL = $mysqli->real_escape_string($url['long']);
+						$longURL = $this->MySQLi->real_escape_string($url['long']);
 						$query = 'INSERT INTO tbl_urls (id_c, longURL_c, hash_c, dateAdded_d) VALUES 
 							(\'' . $id . '\', \'' . $longURL . '\', \'' . $hash . '\', ' . time() . ')';
-						$result = $mysqli->query($query);
+						$result = $this->MySQLi->query($query);
 
 						if ($result) {
 							$this->URLs[$hash]['short'] = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $id;
