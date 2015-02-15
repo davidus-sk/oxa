@@ -219,7 +219,7 @@ class Oxa {
 	 */
 	private function getRandomString($length = 6) {
 		$length = intval($length) > 0 ? $length : 16;
-		$base = 'ABCDEFGHKLMNOPQRSTWXYZabcdefghjkmnpqrstwxyz123456789';
+		$base = 'ABCDEFGHKLMNOPQRSTWXYZabcdefghjkmnpqrstwxyz1234567890';
 		$max = strlen($base)-1;
 		$randString = '';
 
