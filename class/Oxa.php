@@ -39,7 +39,7 @@ class Oxa {
 	 */
 	public function __construct()
 	{
-		$this->MySQLi = new mysqli("localhost", "my_user", "my_password", "world");
+		$this->MySQLi = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
 		if ($this->MySQLi->connect_errno) {
 			throw new Exception('DB ERROR: ' . $this->MySQLi->connect_errno);
