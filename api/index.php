@@ -33,6 +33,7 @@ switch ($httpVerb) {
 				$shortener = new Oxa();
 				$shortener->addUrl($json['longURL']);
 				$result = $shortener->shorten();
+				unset($shortener);
 			} catch (Exception $e) {
 				$statusCode = 500;
 			}
@@ -53,6 +54,7 @@ switch ($httpVerb) {
 			try {
 				$shortener = new Oxa();
 				$result = $shortener->deleteUrl($json['longURL']);
+				unset($shortener);
 			} catch (Exception $e) {
 				$statusCode = 500;
 			}

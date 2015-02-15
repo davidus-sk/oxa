@@ -122,7 +122,7 @@ class Oxa {
 		$result = $this->MySQLi->query($query);
 
 		if ($result) {
-			return true;
+			return $this->MySQLi->affected_rows;
 		}
 
 		return false;
