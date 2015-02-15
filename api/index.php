@@ -50,5 +50,6 @@ switch ($httpVerb) {
 header('Content-Type: application/json');
 echo json_encode(array(
 	'statusCode' => $statusCode,
+	'method' => $httpVerb,
 	'data' => $result,
 ));
