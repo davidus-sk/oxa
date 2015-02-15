@@ -40,6 +40,26 @@ switch ($httpVerb) {
 			$statusCode = 400;
 		}
 	} break;
+	
+	case 'delete': {
+		// get raw data
+		$data = file_get_contents('php://input');
+		
+		// decode
+		$json = json_decode($data, true);
+
+		if ($json) {
+			// run shortener
+			try {
+				$shortener = new Oxa();
+				$result = $shortener->deleteUrl($json['longURL']);
+			} catch (Exception $e) {
+				$statusCode = 500;
+			}
+		} else {
+			$statusCode = 400;
+		}		
+	} break;
 
 	default: {
 		$statusCode = 405;
