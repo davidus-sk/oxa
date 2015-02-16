@@ -9,6 +9,7 @@
 require '../conf/config.php';
 
 // require classes
+require '../class/Cache.php';
 require '../class/Oxa.php';
 
 // vars
