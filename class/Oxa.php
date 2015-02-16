@@ -35,10 +35,17 @@ class Oxa {
 	private $MySQLi = null;
 	
 	/**
+	 * Use file caching
+	 * @var bool
+	 */
+	public $cacheEnabled = true;
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct()
 	{
+		$this->cacheEnabled = CACHE_ENABLED;
 		$this->MySQLi = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
 		if ($this->MySQLi->connect_errno) {
@@ -96,7 +103,7 @@ class Oxa {
 							$this->URLs[$hash]['short'] = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $id;
 							$this->URLs[$hash]['id'] = $id;
 							
-							if (CACHE_ENABLED) {
+							if ($this->cacheEnabled) {
 								$cache = new Cache();
 								$cache->add($longURL, $id, 900);
 							}
@@ -140,13 +147,14 @@ class Oxa {
 	 */
 	private function getShortUrl($longURL) {
 		$hash = md5($longURL);
+		$cache = new Cache();
 
 		// check the array
 		if (!empty($this->URLs[$hash]['short'])) {
 			return $this->URLs[$hash]['short'];
 		}
 		// check cache
-		elseif (CACHE_ENABLED && ($cache = Cache::init()->keyValid($longURL))) {
+		elseif ($this->cacheEnabled && $cache->keyValid($longURL)) {
 			$data = $cache->get($longURL);
 
 			if ($data) {
