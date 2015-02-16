@@ -95,6 +95,11 @@ class Oxa {
 						if ($result) {
 							$this->URLs[$hash]['short'] = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $id;
 							$this->URLs[$hash]['id'] = $id;
+							
+							if (CACHE_ENABLED) {
+								$cache = new Cache();
+								$cache->add($longURL, $id, 900);
+							}
 						} else {
 							$this->URLs[$hash]['error'] = 'DB INSERT ERROR';
 						}
@@ -115,7 +120,7 @@ class Oxa {
 	 */
 	public function deleteUrl($longURL) {
 		// sanitize
-		$id = $this->MySQLi->real_escape_string($longURL);
+		$longURL = $this->MySQLi->real_escape_string($longURL);
 
 		// make request
 		$query = 'DELETE FROM tbl_urls WHERE longURL_c = \'' . $longURL . '\'';
@@ -140,11 +145,19 @@ class Oxa {
 		if (!empty($this->URLs[$hash]['short'])) {
 			return $this->URLs[$hash]['short'];
 		}
+		// check cache
+		elseif (CACHE_ENABLED && ($cache = Cache::init()->keyValid($longURL))) {
+			$data = $cache->get($longURL);
+
+			if ($data) {
+				return $data;
+			}
+		}
 		// check database
-		elseif ($result = $this->getByLongUrl($longURL)) {
+		elseif ($result = $this->getDataByLongUrl($longURL)) {
 			return $result['id_c'];
 		}
-		
+
 		return false;
 	}
 
@@ -153,7 +166,7 @@ class Oxa {
 	 * @param string $id
 	 * @return mixed
 	 */
-	public function getById($id) {
+	public function getDataById($id) {
 		// sanitize
 		$id = $this->MySQLi->real_escape_string($id);
 
@@ -177,7 +190,7 @@ class Oxa {
 	 * @param string $longURL
 	 * @return mixed
 	 */
-	private function getByLongUrl($longURL) {
+	private function getDataByLongUrl($longURL) {
 		// sanitize
 		$longURL = $this->MySQLi->real_escape_string($longURL);
 
@@ -204,7 +217,7 @@ class Oxa {
 		for ($i = 0; $i < 10; $i++) {
 			$id = $this->getRandomString();
 			
-			if ($this->getById($id) === false) {
+			if ($this->getDataById($id) === false) {
 				return $id;
 			}
 		}

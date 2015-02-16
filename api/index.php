@@ -20,6 +20,7 @@ $httpVerb = strtolower($_SERVER['REQUEST_METHOD']);
 
 // process requests
 switch ($httpVerb) {
+	// add new URL to shortener
 	case 'post': {
 		// get raw data
 		$data = file_get_contents('php://input');
@@ -41,7 +42,8 @@ switch ($httpVerb) {
 			$statusCode = 400;
 		}
 	} break;
-	
+
+	// delete URL from shortener
 	case 'delete': {
 		// get raw data
 		$data = file_get_contents('php://input');
@@ -69,6 +71,7 @@ switch ($httpVerb) {
 }
 
 // output
+header('HTTP/1.1 ' . $statusCode);
 header('Content-Type: application/json');
 echo json_encode(array(
 	'statusCode' => $statusCode,

@@ -17,7 +17,7 @@ $request = trim($_SERVER['REQUEST_URI'], '/');
 // route request
 if (preg_match('/[a-z0-9]{6}/i', $request)) {
 	$shortener = new Oxa();
-	$result = $shortener->getById($request);
+	$result = $shortener->getDataById($request);
 	unset($shortener);
 
 	if ($result !== false) {
