@@ -52,8 +52,8 @@ class Cache {
 	 * @param int $duration
 	 */
 	public function add($key, $value, $duration = 300) {
-		$key = sha1($key);
-		$file = $this->cacheDir . $key;
+		$keyHash = sha1($key);
+		$file = $this->cacheDir . $keyHash;
 		
 		// we don't really care about collisions
 		$object = array(

@@ -63,15 +63,25 @@ class Oxa {
 	/**
 	 * Add URL to list
 	 * @param string $longURL
+	 * @param string $secret
+	 * @return bool
 	 */
-	public function addUrl($longURL) {
-		$hash = md5($longURL);
+	public function addUrl($longURL, $secret = null) {
+		// check the URL for format
+		if (preg_match('/^[a-z0-9]+:\/\/.*$/i', $longURL)) {
+			$hash = md5($longURL);
 
-		$this->URLs[$hash] = array(
-			'long' => $longURL,
-			'short' => null,
-			'id' => null,
-		);
+			$this->URLs[$hash] = array(
+				'long' => $longURL,
+				'short' => null,
+				'id' => null,
+				'secret' => $secret,
+			);
+
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -95,14 +105,14 @@ class Oxa {
 					if ($id) {
 						// save in DB
 						$longURL = $this->MySQLi->real_escape_string($url['long']);
-						$query = 'INSERT INTO tbl_urls (id_c, longURL_c, hash_c, dateAdded_d) VALUES 
-							(\'' . $id . '\', \'' . $longURL . '\', \'' . $hash . '\', ' . time() . ')';
+						$query = 'INSERT INTO tbl_urls (id_c, longURL_c, hash_c, dateAdded_d, secret_c) VALUES 
+							(\'' . $id . '\', \'' . $longURL . '\', \'' . $hash . '\', ' . time() . ', ' . (empty($url['secret']) ? 'NULL' : '\'' . sha1($url['secret']) . '\'') . ')';
 						$result = $this->MySQLi->query($query);
 
 						if ($result) {
 							$this->URLs[$hash]['short'] = 'http://' . $_SERVER['SERVER_NAME'] . '/' . $id;
 							$this->URLs[$hash]['id'] = $id;
-							
+
 							if ($this->cacheEnabled) {
 								$cache = new Cache();
 								$cache->add($longURL, $id, 900);
@@ -125,12 +135,13 @@ class Oxa {
 	 * @param string $longURL
 	 * @return boolean
 	 */
-	public function deleteUrl($longURL) {
+	public function deleteUrl($longURL, $secret) {
 		// sanitize
 		$longURL = $this->MySQLi->real_escape_string($longURL);
+		$secret = sha1($secret);
 
 		// make request
-		$query = 'DELETE FROM tbl_urls WHERE longURL_c = \'' . $longURL . '\'';
+		$query = 'DELETE FROM tbl_urls WHERE longURL_c = \'' . $longURL . '\' AND secret_c = \'' . $secret . '\'';
 		$result = $this->MySQLi->query($query);
 
 		if ($result) {

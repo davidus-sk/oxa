@@ -33,7 +33,7 @@ switch ($httpVerb) {
 			// run shortener
 			try {
 				$shortener = new Oxa();
-				$shortener->addUrl($json['longURL']);
+				$shortener->addUrl($json['longURL'], empty($json['secret']) ? null : $json['secret']);
 				$result = $shortener->shorten();
 				unset($shortener);
 			} catch (Exception $e) {
@@ -56,7 +56,7 @@ switch ($httpVerb) {
 			// run shortener
 			try {
 				$shortener = new Oxa();
-				$result = $shortener->deleteUrl($json['longURL']);
+				$result = $shortener->deleteUrl($json['longURL'], $json['secret']);
 				unset($shortener);
 			} catch (Exception $e) {
 				$statusCode = 500;
@@ -66,6 +66,7 @@ switch ($httpVerb) {
 		}		
 	} break;
 
+	// default
 	default: {
 		$statusCode = 405;
 	} break;
