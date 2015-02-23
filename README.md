@@ -13,7 +13,7 @@ To run your own Oxa powered shortener service you will need the following:
 * Apache or Nginx (or other web server)
 * PHP5+
 * MySQL
-* little bit of Linux-Fu
+* A little bit of Linux-Fu
 * A domain name
 
 ## Installation
@@ -29,7 +29,7 @@ define('DB_PASSWORD', 'database_password');
 define('DB_HOST', 'server_name_or_ip');
 ```
 
-Load Oxa's database schema from `sql\oxa.sql' onto your MySQL server: `mysql -u database_username -p < sql\oxa.sql` (*database_username* must have CREATE permissions).
+Load Oxa's database schema from `sql\oxa.sql` into your MySQL server: `mysql -u database_username -p < sql\oxa.sql` (*database_username* must have CREATE permissions).
 
 ## How to use
 
@@ -62,10 +62,12 @@ Example using curl: `curl -X DELETE --data '{"longURL":"http://www.google.com","
 Simply include the client library via `require 'OxaClient.php';` and start using it. Sample code:
 
 ```php
+require 'OxaClient.php';
+
 $shortener = new OxaClient();
 $shortener->addUrl('http://haha.com', 'banana');
 $shortener->addUrl('http://hihi.com');
-$result = $Shortener->shorten();
+$result = $shortener->shorten();
 ```
 
 
